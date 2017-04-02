@@ -29,9 +29,10 @@ class myStreamer(TwythonStreamer):
 		"""If data received, check if this is an original tweet from one of chosen news sources, then reply"""
 		if 'text' in data:
 			try:
-				if not data['retweeted'] and not data['in_reply_to_status_id'] and '@' not in data['text'] and not data['quoted_status_id']:
+				if not data['retweeted'] and not data['in_reply_to_status_id'] and '@' not in data['text'] and not data['is_quote_status']:
 					reply(data['entities']['urls'][0]['expanded_url'], data['id_str'], data['user']['screen_name'])
 				#	print "Responded"
+				#	print data
 			except:
 				pass
 	def on_timeout(self, data):
@@ -67,4 +68,4 @@ if __name__ == '__main__':
 
 	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
 	stream = myStreamer(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-	stream.statuses.filter(follow=['5392522', '612473', '5402612','742143','5741722'], filter_level='low') #Reads from certain Twitter Accounts (@NPR, @BBC, @BBCNews...)
+	stream.statuses.filter(follow=['5392522', '612473', '5402612','742143','5741722', '847890915637284870'], filter_level='low') #Reads from certain Twitter Accounts (@NPR, @BBC, @BBCNews...)
