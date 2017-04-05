@@ -30,7 +30,7 @@ class myStreamer(TwythonStreamer):
 		if 'text' in data:
 			try:
 				if not data['retweeted'] and not data['in_reply_to_status_id'] and '@' not in data['text'] and not data['is_quote_status']:
-					reply(data['entities']['urls'][0]['expanded_url'], data['id_str'], data['user']['screen_name'])
+					reply(data['entities']['urls'][0]['expanded_url'], data['id'], data['user']['screen_name'])
 				#	print "Responded"
 				#	print data
 			except:
@@ -53,7 +53,7 @@ def reply(url, id, screen_name):
 	#print id
 	summary = getSummary(url, 3)
 	split = splitText(summary, 140) #Splits text every 140 characters
-	id = twitter.update_status(status= ("@"+ screen_name + " Here is a short summary of the posted link: "), in_reply_to_status_id=id)['id'] #Posts initial tweet and saves ID
+	id = twitter.update_status(status="@"+ screen_name + " Here is a short summary of the posted link:", in_reply_to_status_id=id)['id'] #Posts initial tweet and saves ID
 	for segment in split:
 		#Send tweet for every 140 characters in reply format
 		id = twitter.update_status(status=segment, in_reply_to_status_id=id)['id']
