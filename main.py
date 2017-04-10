@@ -31,8 +31,6 @@ class myStreamer(TwythonStreamer):
 			try:
 				if not data['retweeted'] and not data['in_reply_to_status_id'] and '@' not in data['text'] and not data['is_quote_status']:
 					reply(data['entities']['urls'][0]['expanded_url'], data['id'], data['user']['screen_name'])
-				#	print "Responded"
-				#	print data
 			except:
 				pass
 	def on_timeout(self, data):
@@ -41,12 +39,20 @@ class myStreamer(TwythonStreamer):
 		print status_code
 
 def splitText(text, n):
-	"""Splits text every n characters"""
-	newText = []
-	while text:
-		newText.append(text[:n])
-		text = text[n:]
-	return newText #TODO Split text at end of words, don't split in the middle
+        """Splits text every n characters (if in the middle of a word go back)"""
+        newText = []
+        while text:
+                x = n
+                val = None
+                while val != " ":
+                        if len(text) >= x-1:
+                                val = text[x-1]
+                                x -= 1
+                        else:
+                                val = " "
+                newText.append(text[:x])
+                text = text[x:]
+        return newText
 
 def reply(url, id, screen_name):
 	"""Replies to a tweet with summary given id"""
@@ -68,4 +74,4 @@ if __name__ == '__main__':
 
 	twitter = Twython(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
 	stream = myStreamer(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-	stream.statuses.filter(follow=['5392522', '612473', '5402612','742143','5741722', '847890915637284870'], filter_level='low') #Reads from certain Twitter Accounts (@NPR, @BBC, @BBCNews...)
+	stream.statuses.filter(follow=['5392522', '612473', '5402612','742143','5741722', '847890915637284870', '3297321975'], filter_level='low') #Reads from certain Twitter Accounts (@NPR, @BBC, @BBCNews...)
